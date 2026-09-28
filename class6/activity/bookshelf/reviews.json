@@ -1,0 +1,8 @@
+[
+  { "title": "The Pragmatic Programmer", "rating": 5, "text": "Changed how I work." },
+  { "title": "The Pragmatic Programmer", "rating": 4, "text": "Good advice, a bit long." },
+  { "title": "Don't Make Me Think", "rating": 4, "text": "Short and practical." },
+  { "title": "Eloquent JavaScript", "rating": 5, "text": "The exercises are great." },
+  { "title": "Eloquent JavaScript", "rating": 3, "text": "Gets hard fast." },
+  { "title": "You Don't Know JS Yet", "rating": 4, "text": "Finally understood scope." }
+]

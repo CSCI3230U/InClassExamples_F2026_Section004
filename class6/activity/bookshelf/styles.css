@@ -1,0 +1,109 @@
+/* Custom properties (variables). We invent the names; they must start with --.
+   Define once here, use anywhere with var(--name). */
+:root {
+  --accent: #b8431d; /* the brand colour: headings, button, hover border */
+  --space: 1rem;     /* the standard gap/padding between things */
+}
+
+/* Width includes padding and border, so boxes are the size we say. */
+* {
+  box-sizing: border-box;
+}
+
+/* Base: remove the browser's default margin, set font and background. */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #fbf7f0;
+}
+
+/* Centred container: at most 60rem wide, auto left/right margins centre it. */
+header,
+main,
+footer {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: var(--space);
+}
+
+/* Flexbox (1D): title on the left, nav on the right, vertically centred. */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* The nav links in a row instead of a bulleted list. */
+nav ul {
+  display: flex;
+  gap: var(--space);
+  list-style: none;
+}
+
+/* Bigger click/tap target for the links. */
+nav a {
+  padding: 0.5rem;
+}
+
+/* Section headings: accent colour with a bar on the left.
+   border-left has no colour, so it uses the text colour. */
+h2 {
+  color: var(--accent);
+  border-left: 4px solid;
+  padding-left: 0.5rem;
+}
+
+/* Grid (2D): as many columns as fit, each at least 14rem wide.
+   Narrow the window and the columns drop, with no media query. */
+#list ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--space);
+}
+
+/* Each book is a white card. */
+.book {
+  padding: var(--space);
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+/* Pseudo-class: only while the mouse is over the card. */
+.book:hover {
+  border-color: var(--accent);
+}
+
+/* The cover fills the card's width. */
+.book img {
+  width: 100%;
+}
+
+/* Grid again, one column: stacks each label above its field. */
+form {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 24rem;
+}
+
+/* Form controls don't inherit the page font by default, so force it. */
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.5rem;
+}
+
+/* The submit button in the accent colour. */
+button {
+  color: white;
+  background: var(--accent);
+  border: none;
+}
+
+/* Darker while hovered. */
+button:hover {
+  background: #8f3314;
+}
