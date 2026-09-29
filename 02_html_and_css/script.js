@@ -23,7 +23,8 @@ console.log(describe({title: 'Eloquent Javascript', status: 'reading'}));
 console.log(addBook("You Don't Know JS", "Kyle Simpson"));
 
 // import 'books'
-import { books, tags } from './books.js';
+import { books, tags, loadBooks } from './books.js';
+import { loadTags } from './tags.js';
 
 console.log(`Books: ${books}`);
 console.log(`Tags: ${tags}`);
@@ -80,3 +81,19 @@ const added = [...books, {title: 'Refactoring', status: 'want'}];
 console.log(books);
 console.log(added);
 
+
+// console.log(await loadBooks());
+// console.log(await loadTags());
+
+// const [ books, tags ] = await Promise.all([loadBooks(), loadTags()]);
+// console.log(books);
+// console.log(tags);
+
+// DOM manipulation
+
+const h1 = document.querySelector('h1');
+console.log(h1.textContent);
+h1.textContent = 'My Reading List';
+
+// don't use innerHTML due to XSS
+// h1.innerHTML = '<script>alert(1)</script>';

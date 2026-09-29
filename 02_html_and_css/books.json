@@ -1,0 +1,12 @@
+[
+    {
+        "id": "1",
+        "title": "The Pragmatic Programmer", 
+        "status": "finished"
+    },
+    {
+        "id": "2",
+        "title": "Eloquent Javascript", 
+        "status": "reading"
+    }
+]
