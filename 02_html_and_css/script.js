@@ -1,99 +1,50 @@
-const accent = '#b8431d';
-// accent = 'blue';
+import { books, makeBook, withBook, withoutBook } from './books.js';
 
-let count = 0;
-count++;
+let shelf = [...books];
 
-{
-    let scoped = 'Only seen in this block';
+const list = document.querySelector('#book-list');
+
+function bookCard(book) {
+    const li = document.createElement('li');
+    const article = document.createElement('article');
+
+    // title
+    const heading = document.createElement('h3');
+    heading.textContent = book.title;   // avoid innerHTML due to XSS risk
+    article.append(heading);
+
+    // author, status
+    const meta = document.createElement('p');
+    meta.textContent = `${book.author} - ${book.status}`;
+    article.append(meta);
+
+    li.append(article);
+    return li;
 }
 
-console.log('Hello!');
-// console.log(`The value of scoped: ${scoped}`);
-
-function describe(book) {
-    return `${book.title} (${book.status})`;
-}
-
-const addBook = (title, author, status = 'want') => {
-    return { title, author, status };
-};
-
-console.log(describe({title: 'Eloquent Javascript', status: 'reading'}));
-console.log(addBook("You Don't Know JS", "Kyle Simpson"));
-
-// import 'books'
-import { books, tags, loadBooks } from './books.js';
-import { loadTags } from './tags.js';
-
-console.log(`Books: ${books}`);
-console.log(`Tags: ${tags}`);
-
-function countByStatus(status) {
-    let count = 0;
-    for (const book of books) {
-        if (book.status === status) {
-            count++;
-        }
+function render() {
+    list.replaceChildren(); // clear old contents
+    for (const book of shelf) {
+        list.append(bookCard(book));
     }
-    return count;
 }
 
-console.log(countByStatus('reading'));
+render();
 
-for (const book of books) {
-    console.log(describe(book));
-}
-console.log(`On our shelf: ${books.length} books.`);
+const form = document.querySelector('#add-form');
 
-// map
-function get_title(book) {
-    return book.title;
-}
-// const book_titles = books.map(get_title);
-const book_titles = books.map( (book) => book.title );
-console.log(book_titles);
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
 
-// filter
-const reading = books.filter( (book) => book.status === 'reading' );
-console.log(reading);
+    const data = new FormData(form); // <- bug here
+    const book = makeBook({
+        title: data.get('title'),
+        author: data.get('author'),
+        status: data.get('status'),
+    });
 
-// reduce
-const counts = books.reduce( (accumulator, book) => {
-    accumulator[book.status] = (accumulator[book.status] ?? 0) + 1;
-    return accumulator;
-}, {} );
-console.log(counts);
+    shelf = withBook(shelf, book);
+    render();
 
-// method chaining
-const summary = books 
-    .filter((book) => book.status === 'reading')
-    .map((book) => book.title)
-    .join(', ');
-console.log(summary);
-
-// mutable
-// books.push({title: 'Refactoring', status: 'want'});
-
-// immutable
-const added = [...books, {title: 'Refactoring', status: 'want'}];
-
-console.log(books);
-console.log(added);
-
-
-// console.log(await loadBooks());
-// console.log(await loadTags());
-
-// const [ books, tags ] = await Promise.all([loadBooks(), loadTags()]);
-// console.log(books);
-// console.log(tags);
-
-// DOM manipulation
-
-const h1 = document.querySelector('h1');
-console.log(h1.textContent);
-h1.textContent = 'My Reading List';
-
-// don't use innerHTML due to XSS
-// h1.innerHTML = '<script>alert(1)</script>';
+    form.reset();
+});
