@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>My Bookshelf</h1>
+
+        <nav aria-label="Primary">
+            <a href="#add">Add a book</a>
+            <a href="#list">My books</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Main content goes here -->
+        <!-- Admin pasword: opensesame -->
+        <section id="add" aria-labelledby="add-heading">
+            <h2 id="add-heading">Add a book</h2>
+            <form id="add-form">
+                <p>
+                    <label for="title">Title:</label>
+                    <input id="title" name="title" type="text" required>
+                </p>
+                <p>
+                    <label for="author">Author:</label>
+                    <input id="author" name="author" type="text">
+                </p>
+                <p>
+                    <label for="status">Status:</label>
+                    <select id="status" name="status">
+                        <option value="reading">Reading</option>
+                        <option value="finished">Finished</option>
+                        <option value="want">Want to read</option>                        
+                    </select>
+                </p>
+                <button type="submit">Add to shelf</button>
+            </form>
+        </section>
+
+        <section id="list" aria-labelledby="list-heading">
+            <h2 id="list-heading">My books</h2>
+            <ul id="book-list" class="booklist">
+                <li>
+                    <article>
+                        <img src="images/pragmatic.jpg" alt="Cover of Pragmatic Programmer">
+                        <h3>The Pragmatic Programmer</h3>
+                        <p>Andrew Hunt &amp; David Thomas</p>
+                        <p>Status: Finished</p>
+                    </article>
+                </li>
+                <li>
+                    <article>
+                        <img src="images/pragmatic.jpg" alt="Cover of Pragmatic Programmer">
+                        <h3>The Pragmatic Programmer</h3>
+                        <p>Andrew Hunt &amp; David Thomas</p>
+                        <p>Status: Finished</p>
+                    </article>
+                </li>
+                <li>
+                    <article>
+                        <img src="images/pragmatic.jpg" alt="Cover of Pragmatic Programmer">
+                        <h3>The Pragmatic Programmer</h3>
+                        <p>Andrew Hunt &amp; David Thomas</p>
+                        <p>Status: Finished</p>
+                    </article>
+                </li>
+                <li>
+                    <article>
+                        <img src="images/pragmatic.jpg" alt="Cover of Pragmatic Programmer">
+                        <h3>The Pragmatic Programmer</h3>
+                        <p>Andrew Hunt &amp; David Thomas</p>
+                        <p>Status: Finished</p>
+                    </article>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Copyright &copy; 2026</p>
+    </footer>
+</body>
+</html>

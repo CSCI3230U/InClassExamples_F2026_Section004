@@ -1,0 +1,14 @@
+[
+    {
+        "id": "1",
+        "title": "The Pragmatic Programmer", 
+        "author": "PP Author",
+        "status": "finished"
+    },
+    {
+        "id": "2",
+        "title": "Eloquent Javascript", 
+        "author": "EJ Author",
+        "status": "reading"
+    }
+]

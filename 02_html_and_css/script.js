@@ -4,6 +4,15 @@ let shelf = [...books];
 
 const list = document.querySelector('#book-list');
 
+list.addEventListener('click', (event) => {
+    const remove_button = event.target.closest('button[data-id]');
+    
+    if (!remove_button) return; // clicked something other than a button
+
+    shelf = withoutBook(shelf, remove_button.dataset.id);
+    render();
+});
+
 function bookCard(book) {
     const li = document.createElement('li');
     const article = document.createElement('article');
@@ -17,6 +26,13 @@ function bookCard(book) {
     const meta = document.createElement('p');
     meta.textContent = `${book.author} - ${book.status}`;
     article.append(meta);
+
+    // remove button
+    const remove_button = document.createElement('button');
+    remove_button.type = 'button';
+    remove_button.textContent = 'Remove';
+    remove_button.dataset.id = book.id;
+    article.append(remove_button);
 
     li.append(article);
     return li;
@@ -48,3 +64,4 @@ form.addEventListener('submit', (event) => {
 
     form.reset();
 });
+
