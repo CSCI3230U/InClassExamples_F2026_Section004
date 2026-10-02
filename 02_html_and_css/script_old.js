@@ -97,3 +97,4 @@ h1.textContent = 'My Reading List';
 
 // don't use innerHTML due to XSS
 // h1.innerHTML = '<script>alert(1)</script>';
+
