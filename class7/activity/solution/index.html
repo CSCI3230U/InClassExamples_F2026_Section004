@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bookshelf</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- A module: needs a server, allows top-level await, and runs after the
+       HTML is parsed, so querySelector can find the elements below. -->
+  <script type="module" src="script.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Bookshelf</h1>
+    <nav>
+      <ul>
+        <li><a href="#add">Add a book</a></li>
+        <li><a href="#list">My shelf</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="add">
+      <h2>Add a book</h2>
+      <!-- New: an id, so script.js can select the form. -->
+      <form id="add-form">
+        <label for="title">Title</label>
+        <input id="title" name="title" required>
+
+        <label for="author">Author</label>
+        <input id="author" name="author">
+
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="want">Want to read</option>
+          <option value="reading">Reading</option>
+          <option value="finished">Finished</option>
+        </select>
+
+        <button type="submit">Add to shelf</button>
+      </form>
+    </section>
+
+    <section id="list">
+      <h2>My shelf</h2>
+      <!-- New: the hard-coded cards are gone. script.js draws one <li> per
+           book from books.json. -->
+      <ul id="book-list"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>CSCI 3230U &middot; Lecture 04b activity - solution</p>
+  </footer>
+</body>
+</html>
