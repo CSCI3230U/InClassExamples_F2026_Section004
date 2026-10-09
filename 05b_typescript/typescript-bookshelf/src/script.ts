@@ -54,6 +54,7 @@ list.addEventListener('click', (event) => {
     const target = event.target as Element;
     const button = target.closest<HTMLButtonElement>('button[data-id]');
     if (!button) return;
-    shelf = withoutBook.apply(shelf, button.dataset.id!);
+    // fix:  I must have auto-corrected withoutBook.apply instead of withoutBook here
+    shelf = withoutBook(shelf, button.dataset.id!);
     render();
 });
