@@ -49,4 +49,11 @@ form.addEventListener('submit', (event) => {
     render();
 });
 
-// TODO: remove event handler
+// remove event handler
+list.addEventListener('click', (event) => {
+    const target = event.target as Element;
+    const button = target.closest<HTMLButtonElement>('button[data-id]');
+    if (!button) return;
+    shelf = withoutBook.apply(shelf, button.dataset.id!);
+    render();
+});

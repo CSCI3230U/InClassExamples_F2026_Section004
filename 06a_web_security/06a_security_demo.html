@@ -11,6 +11,7 @@
       button { margin-right: 0.5rem; }
       code { background: #f3eee3; padding: 0 3px; }
     </style>
+    <meta name="Content-Security-Policy" content="script-src 'nonce-demo123'; require-trusted-types-for 'script'; trusted-types sanitizer dompurify">
   </head>
   <body>
     <h1>“Post a comment”</h1>
@@ -26,8 +27,28 @@
 
     <div class="out" id="out"></div>
 
-    <script>
+    <script nonce="demo123">
+const value = () => document.querySelector('#comment').value;
 
-</script>
+const out = document.querySelector('#out');
+
+const sanitizer = trustedTypes.createPolicy('sanitizer', {
+  createHTML: (s) => DOMPurify.sanitize(s),
+  createScript: (s) => new URL(s, location.href).origin === location.origin ? s : 'about:blank',
+});
+
+document.querySelector('#safe').addEventListener('click', (event) => {
+  out.textContent = value();
+});
+
+document.querySelector('#unsafe').addEventListener('click', (event) => {
+  out.innerHTML = value();
+});
+
+document.querySelector('#sanitized').addEventListener('click', (event) => {
+  // you are here
+  out.innerHTML = sanitizer.createHTML(value());
+});
+    </script>
   </body>
 </html>
