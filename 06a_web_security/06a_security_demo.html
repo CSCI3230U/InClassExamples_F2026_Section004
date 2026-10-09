@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>XSS demo - Lecture 06a</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 2rem; max-width: 40rem; }
+      textarea { width: 100%; }
+      .out { border: 1px solid #ccc; padding: 0.75rem; margin: 0.5rem 0; min-height: 2rem; }
+      button { margin-right: 0.5rem; }
+      code { background: #f3eee3; padding: 0 3px; }
+    </style>
+  </head>
+  <body>
+    <h1>“Post a comment”</h1>
+
+    <p>Try: <code>&lt;img src=x onerror="alert('XSS!')"&gt;</code></p>
+    <textarea id="comment" rows="3">&lt;img src=x onerror="alert('XSS!')"&gt;</textarea>
+
+    <p>
+      <button id="unsafe">Render with innerHTML (unsafe)</button>
+      <button id="sanitized">Sanitized through our policy (probably safe)</button>
+      <button id="safe">Render with textContent (safe)</button>
+    </p>
+
+    <div class="out" id="out"></div>
+
+    <script>
+
+</script>
+  </body>
+</html>
