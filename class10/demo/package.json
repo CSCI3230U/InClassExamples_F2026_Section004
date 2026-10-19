@@ -1,0 +1,15 @@
+{
+  "name": "bookshelf-security-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "serve": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
