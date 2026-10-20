@@ -11,8 +11,8 @@
       button { margin-right: 0.5rem; }
       code { background: #f3eee3; padding: 0 3px; }
     </style>
-    <meta name="Content-Security-Policy" content="script-src 'nonce-demo123'; require-trusted-types-for 'script'; trusted-types sanitizer dompurify">
-    <!-- need to import DOMPurify -->
+    <meta name="Content-Security-Policy" content="script-src 'nonce-demo123'; require-trusted-types-for 'script'; trusted-types dompurify">
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js" nonce="demo123"></script>
   </head>
   <body>
     <h1>“Post a comment”</h1>

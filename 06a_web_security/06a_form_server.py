@@ -19,7 +19,7 @@ from html import escape
 from pathlib import Path
 from urllib.parse import parse_qs
 
-HOST, PORT = "127.0.0.1", 8080
+HOST, PORT = "127.0.0.1", 8088
 PAGE = Path(__file__).with_name("06a_form_demo.html")
 
 # switch between client-only and server validation
