@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pokémon Team</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Pokémon Team</h1>
+      <p id="summary"></p>
+    </header>
+
+    <main>
+      <form id="add-form">
+        <label for="name">Pokémon</label>
+        <input id="name" name="name" required />
+        <label for="type">Type</label>
+        <select id="type" name="type">
+          <option value="fire">Fire</option>
+          <option value="water">Water</option>
+          <option value="grass">Grass</option>
+        </select>
+        <button type="submit">Add to team</button>
+      </form>
+
+      <div class="controls">
+        <label for="filter">Show</label>
+        <select id="filter">
+          <option value="all">All</option>
+          <option value="fire">Fire</option>
+          <option value="water">Water</option>
+          <option value="grass">Grass</option>
+        </select>
+      </div>
+
+      <p id="message" role="status"></p>
+      <ul id="team-list"></ul>
+    </main>
+  </body>
+</html>

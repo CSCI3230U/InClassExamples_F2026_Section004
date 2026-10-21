@@ -1,0 +1,100 @@
+:root {
+  --ink: #1f2430;
+  --paper: #eef1f6;
+  --card: #ffffff;
+  --grey: #6b7280;
+  --accent: #3b4f8a;
+  --fire: #d1491f;
+  --water: #2f6fbf;
+  --grass: #3f8a3a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+header,
+main {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.2rem);
+}
+
+form,
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.35rem 0.6rem;
+}
+
+button {
+  border: 0;
+  border-radius: 6px;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+button:disabled {
+  background: var(--grey);
+  cursor: default;
+}
+
+#message {
+  color: #b42318;
+}
+
+#team-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  padding: 1rem;
+  border: 1px solid #d5dae6;
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.card h3 {
+  margin: 0 0 0.5rem;
+}
+
+.card p {
+  margin: 0.5rem 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  color: #fff;
+  background: var(--grey);
+}
+
+/* ---------- Your CSS goes below this line ---------- */

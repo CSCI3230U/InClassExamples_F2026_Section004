@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Wonderwall",
+    "instrument": "guitar",
+    "practiceEvery": 7,
+    "daysSincePractised": 3
+  },
+  {
+    "title": "Blackbird",
+    "instrument": "guitar",
+    "practiceEvery": 7,
+    "daysSincePractised": 7
+  },
+  {
+    "title": "Clair de Lune",
+    "instrument": "piano",
+    "practiceEvery": 10,
+    "daysSincePractised": 12
+  },
+  {
+    "title": "River Flows in You",
+    "instrument": "piano",
+    "practiceEvery": 14,
+    "daysSincePractised": 5
+  },
+  {
+    "title": "Seven Nation Army",
+    "instrument": "drums",
+    "practiceEvery": 2,
+    "daysSincePractised": 2
+  },
+  {
+    "title": "Back in Black",
+    "instrument": "drums",
+    "practiceEvery": 21,
+    "daysSincePractised": 9
+  }
+]

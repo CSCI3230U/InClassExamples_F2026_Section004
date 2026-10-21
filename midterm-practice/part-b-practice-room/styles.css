@@ -1,0 +1,115 @@
+:root {
+  --ink: #1f2430;
+  --paper: #f3f0f7;
+  --card: #ffffff;
+  --grey: #6b7280;
+  --accent: #4b3f8a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+header,
+main {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+header {
+  --warn: #c2410c;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.2rem);
+}
+
+form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.35rem 0.6rem;
+}
+
+button {
+  border: 0;
+  border-radius: 6px;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+#message {
+  color: #b42318;
+}
+
+#song-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  padding: 1rem;
+  border: 1px solid #dad3e6;
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.card.due {
+  border-left: 6px solid var(--warn);
+}
+
+.card h3 {
+  margin: 0 0 0.5rem;
+}
+
+.card p {
+  margin: 0.5rem 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  color: #fff;
+  background: var(--grey);
+}
+
+.practise {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+}
