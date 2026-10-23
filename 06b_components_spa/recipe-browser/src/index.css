@@ -109,3 +109,18 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.recipe-card {
+  max-width: 22rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.recipe-card img {
+  width: 100%;
+  display: block;
+}
+
+.recipe-card .body {
+  padding: 0.75rem 1rem;
+}
