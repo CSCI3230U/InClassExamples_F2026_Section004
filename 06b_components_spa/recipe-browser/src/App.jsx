@@ -8,6 +8,7 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
+    // <> is a fragment - it groups a list of results into a single return element, but adds nothing to the DOM
     <>
       <section id="center">
         <div className="hero">
