@@ -1,0 +1,12 @@
+body { font-family: system-ui, sans-serif; margin: 2rem; }
+.toolbar { display: flex; gap: .5rem; }
+.toolbar input { flex: 1; max-width: 20rem; padding: .3rem; }
+.recipe-list { list-style: none; padding: 0; display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+.card { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; }
+.card header { display: flex; justify-content: space-between; align-items: start; gap: .5rem; }
+.card h3 { margin: 0; overflow-wrap: anywhere; }
+.fav { border: none; background: none; font-size: 1.5rem; cursor: pointer; color: #d4a000; }
+.servings { display: flex; align-items: center; gap: .4rem; }
+.tags { display: flex; gap: .5rem; list-style: none; padding: 0; }
+.tags li { background: #eee; border-radius: 4px; padding: 0 .4rem; }
