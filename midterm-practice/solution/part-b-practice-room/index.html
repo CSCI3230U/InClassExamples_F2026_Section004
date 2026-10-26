@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Practice Room</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Practice Room</h1>
+      <p id="summary"></p>
+    </header>
+
+    <main>
+      <section id="add">
+        <h2>Add a song</h2>
+        <form id="add-form">
+          <label for="title">Title</label>
+          <input id="title" name="title" required />
+          <label for="instrument">Instrument</label>
+          <select id="instrument" name="instrument">
+            <option value="guitar">Guitar</option>
+            <option value="piano">Piano</option>
+            <option value="drums">Drums</option>
+          </select>
+          <label for="every">Practise every (days)</label>
+          <input id="every" name="every" type="number" min="1" required />
+          <button type="submit">Add song</button>
+        </form>
+        <p id="notice" role="status"></p>
+      </section>
+
+      <section id="list">
+        <h2>Songs</h2>
+        <div class="controls">
+          <label for="show">Show</label>
+          <select id="show">
+            <option value="all">All</option>
+            <option value="due">Needs practice</option>
+          </select>
+          <label><input type="checkbox" id="sorted" /> A-Z</label>
+        </div>
+        <p id="message" role="status"></p>
+        <ul id="song-list"></ul>
+      </section>
+    </main>
+  </body>
+</html>
