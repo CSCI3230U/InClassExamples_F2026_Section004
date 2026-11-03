@@ -43,7 +43,7 @@ function App() {
         </select>
       </header>
       {visible.length === 0 
-      ? <p>No matches</p>
+      ? <p className="empty">No matches</p>
       : <div className="recipe-list">
           {visible.map((r) => (
             <RecipeCard key={r.id} {...r} />
