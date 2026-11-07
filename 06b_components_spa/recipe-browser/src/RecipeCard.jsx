@@ -1,28 +1,34 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import StarRating from './StarRating.jsx';
+import { ThemeContext } from './ThemeContext.js';
+import { useFavouriteStore, useIsFavourite } from './stores/favourites.js';
 
-export default function RecipeCard({ image, title, category, cookTime, description }) {
-    const [fav, setFav] = useState(false);
+export default function RecipeCard({ recipe }) {
+    // const [fav, setFav] = useState(false);
     const [cooked, setCooked] = useState(0);
     const [rating, setRating] = useState(0);
+    const isFavourite = useIsFavourite(recipe.id);
+    const toggle = useFavouriteStore((state) => state.toggle);
+
+    const theme = useContext(ThemeContext); // "dark"
 
     return (
         <article className="recipe-card">
-            <img src={image} alt={title} />
+            <img src={image} alt={recipe.title} />
             <div className="body">
-                <p className="meta">{category} - {cookTime} minutes</p>
-                <h2>{title}</h2>
-                <p className="description">{description}</p>
-                <StarRating value={rating} onChange={setRating} />
+                <p className="meta">{recipe.category} - {recipe.cookTime} minutes</p>
+                <h2>{recipe.title}</h2>
+                <p className="description">{recipe.description}</p>
+                <StarRating value={recipe.rating} onChange={setRating} />
                 <div className="actions">
-                    <button className={fav ? 'active' : ''}
-                            onClick={() => setFav(!fav)}>
-                        {fav ? 'Favourited' : 'Favourite'}
+                    <button className={isFavourite ? 'active' : ''}
+                            onClick={toggle(recipe)}>
+                            {isFavourite ? 'Favourited' : 'Favourite'}
                     </button>
-                    <button className={cooked > 0 ? 'active' : ''}
+                    <button className={recipe.cooked > 0 ? 'active' : ''}
                             onClick={() => setCooked((prev) => prev + 1)}>
-                        Cooked {cooked} times
+                        Cooked {recipe.cooked} times
                     </button>
                 </div>
             </div>
