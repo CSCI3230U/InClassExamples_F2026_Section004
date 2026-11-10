@@ -4,16 +4,30 @@
   width: 100%;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 0 24px 56px;
+  padding: 0 24px 64px;
+  /* #root centres everything; page content reads left-aligned. */
+  text-align: left;
+}
+
+/* Controls inherit the page font instead of the browser default. */
+.app :where(input, select, button) {
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--text-h);
+}
+
+.app :where(input, select, button, a):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 @media (max-width: 600px) {
   .app {
-    padding: 0 16px 40px;
+    padding: 0 16px 48px;
   }
 }
 
-/* ---------- Compact search toolbar ---------- */
+/* ---------- Search toolbar ---------- */
 
 .app > header {
   position: sticky;
@@ -22,69 +36,85 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 16px;
-  padding: 14px 0;
-  margin-bottom: 24px;
+  gap: 16px;
+  padding: 20px 0;
+  margin-bottom: 36px;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
 .app > header h1 {
-  margin-right: auto;
+  /* Toolbar title: smaller than the global display h1. */
+  margin: 0 auto 0 0;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
+/* Filters sit on their own row so the toolbar never feels packed. */
+.filters {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 /* Search field */
-.app > header input[type='text'],
-.app > header input:not([type]) {
-  flex: 1 1 200px;
+.filters input[type='text'],
+.filters input:not([type]) {
+  flex: 1 1 240px;
   min-width: 0;
-  max-width: 280px;
+  max-width: 360px;
   height: var(--control-h);
-  padding: 0 12px 0 34px;
+  padding: 0 14px 0 38px;
   background-color: var(--surface);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a837b' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f8d96' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: 10px center;
-  background-size: 15px;
+  background-position: 12px center;
+  background-size: 16px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.app > header input::placeholder {
+.filters input::placeholder {
   color: var(--text);
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
-.app > header input[type='text']:focus,
-.app > header input:not([type]):focus {
+.filters input[type='text']:focus,
+.filters input:not([type]):focus {
   border-color: var(--accent-border);
   outline: none;
   box-shadow: 0 0 0 3px var(--accent-bg);
 }
 
 /* Category dropdown */
-.app > header select {
+.filters select {
   height: var(--control-h);
-  padding: 0 10px;
+  padding: 0 12px;
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.filters select:hover {
+  border-color: var(--accent-border);
 }
 
 /* "Quick recipes only" checkbox, styled as a pill to match the controls */
-.app > header label {
+.filters label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   height: var(--control-h);
-  padding: 0 12px;
-  font-size: 0.875rem;
-  color: var(--text-h);
+  padding: 0 16px;
   white-space: nowrap;
   background: var(--surface);
   border: 1px solid var(--border-strong);
@@ -92,52 +122,175 @@
   box-shadow: var(--shadow-sm);
   cursor: pointer;
   user-select: none;
+  transition: border-color 0.15s;
 }
 
-.app > header label:hover {
+.filters label:hover {
   border-color: var(--accent-border);
 }
 
-.app > header label input[type='checkbox'] {
-  width: 15px;
-  height: 15px;
+.filters label input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
   margin: 0;
   accent-color: var(--accent);
   cursor: pointer;
 }
 
-/* Stack the toolbar on narrow screens, search first and full width */
+/* ---------- Saved count badge ---------- */
+
+.favourite-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: var(--control-h);
+  padding: 0 16px;
+  font-size: 0.9375rem;
+  color: var(--accent);
+  white-space: nowrap;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+}
+
+.favourite-summary strong {
+  font-weight: 600;
+}
+
+/* Stack the toolbar on narrow screens, each control full width */
 @media (max-width: 720px) {
   .app > header {
-    gap: 8px;
+    gap: 12px;
+    padding: 16px 0;
+    margin-bottom: 28px;
   }
   .app > header h1 {
     flex: 1 0 100%;
-    margin-right: 0;
+    margin: 0;
+    white-space: normal;
   }
-  .app > header input[type='text'],
-  .app > header input:not([type]) {
+  .filters input[type='text'],
+  .filters input:not([type]) {
     flex: 1 1 100%;
     max-width: none;
   }
-  .app > header label,
-  .app > header select {
+  .filters label,
+  .filters select {
     flex: 1 1 0;
     justify-content: center;
   }
+}
+
+/* ---------- Saved drawer ---------- */
+
+.saved-drawer {
+  margin-bottom: 32px;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.saved-drawer-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.saved-drawer-toggle:hover {
+  color: var(--accent);
+}
+
+.saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.saved-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 10px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+
+.saved-item img {
+  flex: none;
+  width: 52px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.saved-item-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.9375rem;
+  color: var(--text-h);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.saved-item button {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.saved-item button:hover {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+/* "Clear All" — only the button that follows the list, not the toggle */
+.saved-drawer > ul + button {
+  margin-top: 16px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.saved-drawer > ul + button:hover {
+  border-color: var(--border-strong);
 }
 
 /* ---------- Results ---------- */
 
 .recipe-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 28px;
   align-items: start;
 }
 
 .empty {
-  padding: 56px 0;
+  padding: 64px 0;
   text-align: center;
   color: var(--text);
 }
@@ -173,41 +326,72 @@
 .recipe-card .body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 14px 16px 16px;
+  gap: 10px;
+  padding: 18px 20px 20px;
 }
 
 .recipe-card .meta {
   font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
+.recipe-card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
 .recipe-card .description {
-  font-size: 0.875rem;
-  line-height: 1.45;
+  font-size: 0.9375rem;
+  line-height: 1.5;
   color: var(--text);
+}
+
+/* ---------- Star rating ---------- */
+
+.star-rating {
+  display: flex;
+  gap: 2px;
+  margin: 2px 0 2px -5px;
+}
+
+.star-rating .star {
+  padding: 2px 5px;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--star);
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.star-rating .star:hover {
+  transform: scale(1.15);
 }
 
 /* ---------- Card actions ---------- */
 
 .recipe-card .actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-  padding-top: 12px;
+  /* Two secondary buttons on one row, the primary link spanning below. */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 16px;
   border-top: 1px solid var(--border);
 }
 
 .recipe-card .actions button {
-  flex: 1 1 0;
   min-width: 0;
-  padding: 7px 10px;
-  font-size: 0.8125rem;
+  padding: 8px 10px;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-h);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -228,26 +412,34 @@
   border-color: var(--accent-border);
 }
 
-/* ---------- Star rating ---------- */
-
-.star-rating {
-  display: flex;
-  gap: 2px;
-  margin: -2px 0 0 -4px;
+/* "View recipe" — the card's primary action */
+.recipe-card .actions a {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--control-h);
+  padding: 0 16px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 
-.star-rating .star {
-  padding: 2px 4px;
-  font-size: 1.125rem;
+.recipe-card .actions a::after {
+  content: '\2192';
+  font-size: 1.0625rem;
   line-height: 1;
-  color: var(--star);
-  background: none;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: transform 0.1s;
 }
 
-.star-rating .star:hover {
-  transform: scale(1.15);
+.recipe-card .actions a:hover {
+  /* Fills with the accent in both themes; page bg keeps the label readable. */
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
 }
