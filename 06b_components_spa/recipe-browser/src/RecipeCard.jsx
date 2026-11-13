@@ -18,7 +18,7 @@ export default function RecipeCard({ recipe }) {
         <article className="recipe-card">
             <img src={recipe.image} alt={recipe.title} />
             <div className="body">
-                <p className="meta">{recipe.category} - {recipe.cookTime} minutes</p>
+                <p className="meta">{recipe.category} - {recipe.area}</p>
                 <h2>{recipe.title}</h2>
                 <p className="description">{recipe.description}</p>
                 <StarRating value={rating} onChange={setRating} />

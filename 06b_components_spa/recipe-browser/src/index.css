@@ -216,6 +216,14 @@ code {
   }
 }
 
+.recipe-card .description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .recipe-missing {
   margin: 48px auto;
   padding: 0 20px;
