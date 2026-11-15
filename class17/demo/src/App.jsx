@@ -19,7 +19,9 @@ export default function App() {
 
   function addRecipe() {
     const recipe = {
-      id: crypto.randomUUID(),
+      // The id ends up in the URL (/recipes/r5), so keep it short and
+      // readable. length + 1 is unique here because recipes are never deleted.
+      id: `r${recipes.length + 1}`,
       name: `New recipe ${recipes.length + 1}`,
       minutes: 10,
       tags: ["new"],
