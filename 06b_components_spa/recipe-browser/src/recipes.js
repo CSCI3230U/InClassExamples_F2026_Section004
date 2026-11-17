@@ -12,6 +12,6 @@ export function toRecipe(meal) {
     image: meal.strMealThumb,
     category: meal.strCategory,
     area: meal.strArea,
-    description: meal.strInstructions,
+    description: meal.strInstructions ?? '',
   };
 }
