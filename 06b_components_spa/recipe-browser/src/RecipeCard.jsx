@@ -5,7 +5,7 @@ import StarRating from './StarRating.jsx';
 import { ThemeContext } from './ThemeContext.js';
 import { useFavouriteStore, useIsFavourite } from './stores/favourites.js';
 
-export default function RecipeCard({ recipe }) {
+export default function RecipeCard({ recipe, priority }) {
     const [cooked, setCooked] = useState(0);
     const [rating, setRating] = useState(0);
 
@@ -16,7 +16,14 @@ export default function RecipeCard({ recipe }) {
 
     return (
         <article className="recipe-card">
-            <img src={recipe.image} alt={recipe.title} />
+            <img 
+              src={`${recipe.image}/small`} 
+              alt={recipe.title}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : 'auto'}
+              width="320"
+              height="160"
+               />
             <div className="body">
                 <p className="meta">{recipe.category} - {recipe.area}</p>
                 <h2>{recipe.title}</h2>
@@ -32,7 +39,9 @@ export default function RecipeCard({ recipe }) {
                             onClick={() => setCooked((prev) => prev + 1)}>
                         Cooked {cooked} times
                     </button>
-                    <Link to={`/recipes/${recipe.id}`}>View recipe</Link>
+                    <Link to={`/recipes/${recipe.id}`}>View recipe
+                        <span className="sr-only"> for {recipe.title}</span>
+                    </Link>
                 </div>
             </div>
         </article>

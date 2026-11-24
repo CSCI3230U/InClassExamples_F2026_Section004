@@ -53,7 +53,9 @@ export default function RecipeList() {
           <input value={search}
                  onChange={(e) => setSearch(e.target.value)}
                  placeholder="Search recipes..." />
-          <select value={category}
+
+          <label htmlFor="category">Category:</label>
+          <select value={category} id="category"
                   onChange={(e) => setCategory(e.target.value)}>
             <option value="all">All</option>
             <option value="Chicken">Chicken</option>
@@ -62,26 +64,32 @@ export default function RecipeList() {
             <option value="Seafood">Seafood</option>
             <option value="Vegetarian">Vegetarian</option>
           </select>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+
+          <label htmlFor="sortBy">Sort By:</label>
+          <select value={sortBy} id="sortBy" onChange={(e) => setSortBy(e.target.value)}>
             <option value="default">Default</option>
             <option value="title">Title (A-Z)</option>
           </select>
         </div>
+        <SavedDrawer />
       </header>
 
-      <SavedDrawer />
-
-      {loadStatus === 'loading' && <p>Loading recipes...</p>}
-      {loadStatus === 'error' && <p>Could not load recipes.</p>}
-      {loadStatus === 'ok' && (
-        visible.length === 0
-        ? <p className="empty">No matches</p>
-        : <div className="recipe-list">
-            {visible.map((r) => (
-              <RecipeCard key={r.id} recipe={r} />
-            ))}
-          </div>
-      )}
+      <main>
+        {loadStatus === 'loading' && <p>Loading recipes...</p>}
+        {loadStatus === 'error' && <p>Could not load recipes.</p>}
+        {loadStatus === 'ok' && (
+          visible.length === 0
+          ? <p className="empty">No matches</p>
+          : <div className="recipe-list">
+              {visible.map((r, i) => (
+                <RecipeCard 
+                  key={r.id} 
+                  recipe={r} 
+                  priority={i === 0} />
+              ))}
+            </div>
+        )}
+      </main>
     </div>
   )
 }

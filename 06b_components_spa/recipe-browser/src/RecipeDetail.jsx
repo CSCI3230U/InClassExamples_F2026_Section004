@@ -38,6 +38,7 @@ export default function RecipeDetail() {
     if (loadStatus === 'error') return <p>Could not load this recipe. <Link to="/">Back</Link></p>
     if (!recipe) return <p className="recipe-missing">No such recipe. <Link to="/">Back</Link></p>
     return (
+      <main>
         <article className="recipe-detail">
             <Link className="back-link" to="/">Back to recipes</Link>
             <h1>{recipe.title}</h1>
@@ -45,5 +46,6 @@ export default function RecipeDetail() {
             <img src={recipe.image} alt={recipe.title} />
             <p className="description">{recipe.description}</p>
         </article>
+      </main>
     );
 }
