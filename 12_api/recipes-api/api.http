@@ -1,0 +1,10 @@
+@base = http://localhost:3001/api/recipes
+
+### read all recipes
+GET {{base}}
+
+### create a recipe
+POST {{base}}
+Content-Type: application/json 
+
+{"title": "Pizza"}
